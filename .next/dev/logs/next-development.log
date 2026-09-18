@@ -9,3 +9,5 @@
 {"timestamp":"00:05:01.152","source":"Server","level":"LOG","message":"✓ Compiled in 0ms"}
 {"timestamp":"00:05:03.258","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
 {"timestamp":"00:05:12.486","source":"Server","level":"LOG","message":"✓ Compiled in 0ms"}
+{"timestamp":"00:10:05.207","source":"Browser","level":"INFO","message":"Download the React DevTools for a better development experience: https://react.dev/link/react-devtools"}
+{"timestamp":"00:10:09.795","source":"Server","level":"LOG","message":"○ Compiling /carrito ..."}
