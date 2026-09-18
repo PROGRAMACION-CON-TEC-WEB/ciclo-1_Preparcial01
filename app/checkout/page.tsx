@@ -51,7 +51,7 @@ function getErrors(values: FormValues): FormErrors {
 }
 
 export default function CheckoutPage() {
-  const { items, totalPrice, removeFromCart, clearCart } =
+  const { items, totalPrice, removeFromCart, updateQuantity, clearCart } =
     useCart();
 
   // Un solo objeto de estado gobierna todos los campos del formulario.
@@ -63,7 +63,12 @@ export default function CheckoutPage() {
   const errors = getErrors(formValues);
   const isFormValid = Object.keys(errors).length === 0 && formValues.acceptedTerms;
 
-  // Un único manejador sirve para cualquier input: lee `name` y `value` del evento y actualiza esa sola llave del objeto de estado (o `checked` si es un checkbox).
+
+  // Estado de carga mientras por decirlo asi se procesa el pedido, y bandera de éxito para mostrar la confirmaci aonnl terminar.
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [orderCompleted, setOrderCompleted] = useState(false);
+
+  // Un unico manejador sirve para cualquier input: lee name y value del evento y actualiza esa sola llave del objeto de estado (o `checked` si es un checkbox).
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
@@ -83,6 +88,42 @@ export default function CheckoutPage() {
     if (name === "fullName" || name === "email") {
       setTouched((prev) => ({ ...prev, [name]: true }));
     }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    // Evita la recarga nativa del navegador al enviar el formulario.
+    event.preventDefault();
+
+    if (!isFormValid || isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Simula la llamada asíncrona a un servicio de pagos/órdenes.
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    clearCart();
+    setFormValues(initialFormValues);
+    setTouched(initialTouched);
+    setIsSubmitting(false);
+    setOrderCompleted(true);
+  }
+
+  if (orderCompleted) {
+    return (
+      <div className="text-center">
+        <h1 className="mb-2 text-3xl font-bold text-green-600">
+          ¡Pedido confirmado! ✓
+        </h1>
+        <p className="text-gray-600">
+          Gracias por tu compra. Te enviamos la confirmación a tu correo.
+        </p>
+        <Link href="/" className="mt-4 inline-block text-blue-600 hover:underline">
+          ← Volver al catálogo
+        </Link>
+      </div>
+    );
   }
 
   if (items.length === 0) {
@@ -129,7 +170,22 @@ export default function CheckoutPage() {
               </div>
 
               <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                  className="h-8 w-8 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+                >
+                  −
+                </button>
                 <span className="w-6 text-center font-medium">{item.quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                  disabled={item.quantity >= item.product.stock}
+                  className="h-8 w-8 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  +
+                </button>
               </div>
 
               <p className="w-20 text-right font-semibold text-gray-900">
@@ -156,7 +212,10 @@ export default function CheckoutPage() {
         </div>
       </div>
 
-      <form className="mt-6 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-6 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+      >
         <h2 className="text-xl font-semibold">Datos de pago</h2>
 
         <div>
@@ -225,10 +284,10 @@ export default function CheckoutPage() {
 
         <button
           type="submit"
-          disabled={!isFormValid}
+          disabled={!isFormValid || isSubmitting}
           className="mt-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
-          Confirmar pedido
+          {isSubmitting ? "Procesando pedido..." : "Confirmar pedido"}
         </button>
       </form>
     </div>
