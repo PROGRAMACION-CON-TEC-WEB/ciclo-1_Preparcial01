@@ -114,7 +114,7 @@ export default function CheckoutPage() {
     return (
       <div className="text-center">
         <h1 className="mb-2 text-3xl font-bold text-green-600">
-          ¡Pedido confirmado! ✓
+          ¡Pedido confirmado, Thanks =)!
         </h1>
         <p className="text-gray-600">
           Gracias por tu compra. Te enviamos la confirmación a tu correo.
