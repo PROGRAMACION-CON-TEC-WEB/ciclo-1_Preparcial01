@@ -13,10 +13,13 @@ export default function Header() {
           ShopHub
         </Link>
 
-        <div className="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2">
+        <Link
+          href="/carrito"
+          className="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 transition-colors hover:bg-blue-100"
+        >
           <span className="text-xl">🛒</span>
           <span className="font-semibold text-blue-700">{totalItems}</span>
-        </div>
+        </Link>
       </div>
     </header>
   );

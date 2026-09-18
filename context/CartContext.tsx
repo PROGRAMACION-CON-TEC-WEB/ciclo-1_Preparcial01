@@ -6,7 +6,11 @@ import type { Product, CartItem } from "@/types/product";
 interface CartContextValue {
   items: CartItem[];
   totalItems: number;
+  totalPrice: number;
   addToCart: (product: Product) => void;
+  removeFromCart: (productId: number) => void;
+  updateQuantity: (productId: number, quantity: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -32,10 +36,45 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  function removeFromCart(productId: number) {
+    setItems((prevItems) => prevItems.filter((item) => item.product.id !== productId));
+  }
+
+  function updateQuantity(productId: number, quantity: number) {
+    if (quantity < 1) {
+      removeFromCart(productId);
+      return;
+    }
+
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.product.id === productId ? { ...item, quantity } : item
+      )
+    );
+  }
+
+  function clearCart() {
+    setItems([]);
+  }
+
   const totalItems = items.reduce((total, item) => total + item.quantity, 0);
+  const totalPrice = items.reduce(
+    (total, item) => total + item.product.price * item.quantity,
+    0
+  );
 
   return (
-    <CartContext.Provider value={{ items, totalItems, addToCart }}>
+    <CartContext.Provider
+      value={{
+        items,
+        totalItems,
+        totalPrice,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

@@ -1,6 +1,7 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/carrito/page": "/carrito",
   "/favicon.ico/route": "/favicon.ico",
   "/page": "/",
   "/productos/[id]/page": "/productos/[id]"
