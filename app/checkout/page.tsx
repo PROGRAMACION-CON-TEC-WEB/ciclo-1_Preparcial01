@@ -11,6 +11,16 @@ interface FormValues {
   acceptedTerms: boolean;
 }
 
+interface FormErrors {
+  fullName?: string;
+  email?: string;
+}
+
+interface Touched {
+  fullName: boolean;
+  email: boolean;
+}
+
 const initialFormValues: FormValues = {
   fullName: "",
   email: "",
@@ -18,14 +28,42 @@ const initialFormValues: FormValues = {
   acceptedTerms: false,
 };
 
+const initialTouched: Touched = {
+  fullName: false,
+  email: false,
+};
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Se recalculan en cada render a partir de formValues ttipo caso donde no hay un estado aparte para los errores, así nunca quedan desactualizados.
+function getErrors(values: FormValues): FormErrors {
+  const errors: FormErrors = {};
+
+  if (values.fullName.trim().length < 5) {
+    errors.fullName = "El nombre debe tener al menos 5 caracteres";
+  }
+
+  if (!EMAIL_REGEX.test(values.email)) {
+    errors.email = "Ingresa un correo electrónico válido";
+  }
+
+  return errors;
+}
+
 export default function CheckoutPage() {
-  const { items, totalPrice, increaseQuantity, decreaseQuantity, removeFromCart, clearCart } =
+  const { items, totalPrice, removeFromCart, clearCart } =
     useCart();
 
-  // En este caso un solo objeto de estado gobierna todos los campos del formulario.
+  // Un solo objeto de estado gobierna todos los campos del formulario.
   const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
 
-  // Un unico manejador sirve para cualquier input ya sea lee el `name` y `value` de evento y actualiza esa sola llave del objeto de estado (o `checked` tecnicamenre si es un checkbox).
+  // Qué campos ya perdieron el foco alguna vez (para no mostrar errores agresivamente mientras el usuario escribe por primera vez).
+  const [touched, setTouched] = useState<Touched>(initialTouched);
+
+  const errors = getErrors(formValues);
+  const isFormValid = Object.keys(errors).length === 0 && formValues.acceptedTerms;
+
+  // Un único manejador sirve para cualquier input: lee `name` y `value` del evento y actualiza esa sola llave del objeto de estado (o `checked` si es un checkbox).
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
@@ -36,6 +74,15 @@ export default function CheckoutPage() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+  }
+
+  // Marca el campo como "tocado" cuando el usuario le quita el foco, que es el único momento en el que se muestran sus mensajes de error.
+  function handleBlur(event: React.FocusEvent<HTMLInputElement>) {
+    const { name } = event.target;
+
+    if (name === "fullName" || name === "email") {
+      setTouched((prev) => ({ ...prev, [name]: true }));
+    }
   }
 
   if (items.length === 0) {
@@ -82,21 +129,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => decreaseQuantity(item.product.id)}
-                  className="h-8 w-8 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-                >
-                  −
-                </button>
                 <span className="w-6 text-center font-medium">{item.quantity}</span>
-                <button
-                  type="button"
-                  onClick={() => increaseQuantity(item.product.id)}
-                  className="h-8 w-8 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-                >
-                  +
-                </button>
               </div>
 
               <p className="w-20 text-right font-semibold text-gray-900">
@@ -136,8 +169,12 @@ export default function CheckoutPage() {
             type="text"
             value={formValues.fullName}
             onChange={handleChange}
+            onBlur={handleBlur}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
           />
+          {touched.fullName && errors.fullName && (
+            <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
+          )}
         </div>
 
         <div>
@@ -150,8 +187,12 @@ export default function CheckoutPage() {
             type="email"
             value={formValues.email}
             onChange={handleChange}
+            onBlur={handleBlur}
             className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
           />
+          {touched.email && errors.email && (
+            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+          )}
         </div>
 
         <div>
@@ -184,7 +225,8 @@ export default function CheckoutPage() {
 
         <button
           type="submit"
-          className="mt-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+          disabled={!isFormValid}
+          className="mt-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
         >
           Confirmar pedido
         </button>
