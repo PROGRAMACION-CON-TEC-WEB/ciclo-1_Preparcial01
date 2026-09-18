@@ -1,5 +1,6 @@
-# ShopHub - Preparcial (20%)
+# ShopHub - Parcial (20%)
 **Plataforma E-Commerce con Next.js y React Context**
+
 
 ---
 
@@ -65,14 +66,39 @@ Ruta dinámica parametrizada para consultar la información completa de un produ
 
 ---
 
-## 🏗️ Requisitos de Arquitectura y Buenas Prácticas
+## Req. de Arquitectura y Buenas Prác
 
-*   **Estado Global Compartido:** Implementar un `React Context` que centralice la información del carrito y exponga métodos para agregar ítems desde cualquier nivel de la aplicación.
-*   **Persistencia de Navegación:** El estado global no debe reiniciarse ni borrarse al cambiar entre rutas.
-*   **Inmutabilidad:** Garantizar la actualización adecuada de arreglos y objetos en memoria, asegurando que React detecte los cambios de estado.
-*   **Modelado y Tipado:** Definir interfaces/tipos en TypeScript para los modelos de datos y props de componentes.
-*   **Fronteras Cliente/Servidor (`"use client"`):** Identificar y marcar como componentes de cliente únicamente aquellos que requieran interactividad o hooks (`useState`, `useEffect`, `useContext`).
-*   **Diseño de Interfaz:** Aplicar un diseño visual ordenado, limpio y funcional (UI/UX) utilizando Tailwind CSS o CSS Modules.
+-   Estado Global Compartido: Implementar un React Context que centralice la información del carrito y exponga métodos para agregar ítems desde cualquier nivel de la aplicación.
+-   Persistencia de Navegación: El estado global no debe reiniciarse ni borrarse al cambiar entre rutas.
+-   Inmutabilidad: Garantizar la actualización adecuada de arreglos y objetos en memoria, asegurando que React detecte los cambios de estado.
+-   Modelado y Tipado: Definir interfaces/tipos en TypeScript para los modelos de datos y props de componentes.
+-   Fronteras Cliente/Servidor (use client): Identificar y marcar como componentes de cliente únicamente aquellos que requieran interactividad o hooks (useState, useEffect, useContext).
+-   Diseño de Interfaz: Aplicar un diseño visual ordenado, limpio y funcional tipo UI/UX CSS Modules.
+
+
+---
+
+**Decisiones de Arquitectura y Cambios**
+
+**Punto 1 CartContext**
+En el preparcial solo teníamos addToCart y no se podía restar o borrar nada. El tipo CartItem ya guardaba el product y la quantity, así que no cambié esa estructura, solo agregué las funciones que faltaban: removeFromCart para borrar un producto por id, updateQuantity para subir/bajar cantidades (si la cantidad baja de 1 se llama a removeFromCart para no dejar ítems en 0), y clearCart para vaciar todo dejando el array en `[]`.
+
+Para la inmutabilidad no usé push ni splice. En addToCart y updateQuantity usé .map() devolviendo copia del ítem actualizado ({ ...item, quantity }), en removeFromCart usé .filter() y en clearCart pasé el array nuevo vacío []. Todo se maneja con la forma funcional de setItems(prev => ...) para que React detecte bien los cambios por referencia y no rompa la reactividad.
+
+**Punto 2] Totales**
+totalItems y totalPrice no son estados en este caso (useState), se calculan directo en el render recorriendo items con .reduce()
+
+Decidí hacerlo así porque items es la única fuente de verdad. Si los totales tuvieran su propio  useState, habría que acordarse de actualizarlos manualmente en cada función (add, update, remove, clear) y es muy fácil que queden desincronizados. Al calcularlos al vuelo con .reduce() siempre coinciden con lo que hay en el carrito. Como el array del carrito es pequeño, no afectaba el rendimiento y no hizo falta meterle useMemo.
+
+**Punto 3 Formulario de Checkout**
+Hice el formulario en app/checkout/page.tsx usando puro React sin librerías como react-hook-form o sino estoy mal zod.
+
+- Usé un solo objeto de estado formValues para todos los campos (fullName, mail, paymentMethod, acceptedTerms).
+- Hice un handleChange genérico que lee e.target.name, value y checked para actualizar la clave correspondiente del estado sin repetir código.
+- Los errores no se guardan en un estado, se calculan en cada render pasando formValues por una función de validación (usé un regex sencillo para el email).
+- Para que las validaciones no molesten al escribir por primera vez, usé un estado touched que se activa en el onBlur. Los mensajes solo salen si el campo fue tocado y tiene error.
+- El botón de enviar se deshabilita si la función de errores devuelve algo o si el checkbox de términos está en fals.
+- En el handleSubmit puse preventDefault() para evitar recargas. Manejo un estado isSubmitting para simular la petición de 1.5s con un setTimeout y evitar doble clic. Al terminar, llamo a clearCart() (que de una actualiza el badge del Header porque consumen el mismo contexto), reseteo los inputs y muestro la pantalla de confirmación. Todo estilizado con Tailwind y tipado con TypeScript.
 
 ---
 
