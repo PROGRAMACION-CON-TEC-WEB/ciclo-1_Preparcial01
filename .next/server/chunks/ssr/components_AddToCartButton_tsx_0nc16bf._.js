@@ -1,0 +1,3 @@
+module.exports=[81571,a=>{"use strict";var b=a.i(87924),c=a.i(72131),d=a.i(20810);a.s(["default",0,function({product:a}){let{addToCart:e}=(0,d.useCart)(),[f,g]=(0,c.useState)(!1),h=0===a.stock;return(0,b.jsx)("button",{type:"button",onClick:function(){e(a),g(!0),setTimeout(()=>g(!1),1500)},disabled:h,className:"w-full rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300",children:h?"Sin stock":f?"¡Agregado! ✓":"Agregar al carrito"})}])}];
+
+//# sourceMappingURL=components_AddToCartButton_tsx_0nc16bf._.js.map
