@@ -1,11 +1,42 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+
+interface FormValues {
+  fullName: string;
+  email: string;
+  paymentMethod: string;
+  acceptedTerms: boolean;
+}
+
+const initialFormValues: FormValues = {
+  fullName: "",
+  email: "",
+  paymentMethod: "tarjeta",
+  acceptedTerms: false,
+};
 
 export default function CheckoutPage() {
   const { items, totalPrice, increaseQuantity, decreaseQuantity, removeFromCart, clearCart } =
     useCart();
+
+  // En este caso un solo objeto de estado gobierna todos los campos del formulario.
+  const [formValues, setFormValues] = useState<FormValues>(initialFormValues);
+
+  // Un unico manejador sirve para cualquier input ya sea lee el `name` y `value` de evento y actualiza esa sola llave del objeto de estado (o `checked` tecnicamenre si es un checkbox).
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
+    const { name, value, type } = event.target;
+    const checked = (event.target as HTMLInputElement).checked;
+
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  }
 
   if (items.length === 0) {
     return (
@@ -91,6 +122,73 @@ export default function CheckoutPage() {
           </span>
         </div>
       </div>
+
+      <form className="mt-6 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 className="text-xl font-semibold">Datos de pago</h2>
+
+        <div>
+          <label htmlFor="fullName" className="mb-1 block text-sm font-medium text-gray-700">
+            Nombre completo
+          </label>
+          <input
+            id="fullName"
+            name="fullName"
+            type="text"
+            value={formValues.fullName}
+            onChange={handleChange}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-700">
+            Correo de facturación
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            value={formValues.email}
+            onChange={handleChange}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="paymentMethod" className="mb-1 block text-sm font-medium text-gray-700">
+            Método de pago
+          </label>
+          <select
+            id="paymentMethod"
+            name="paymentMethod"
+            value={formValues.paymentMethod}
+            onChange={handleChange}
+            className="w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+          >
+            <option value="tarjeta">Tarjeta de crédito/débito</option>
+            <option value="pse">PSE</option>
+            <option value="contraentrega">Pago contraentrega</option>
+          </select>
+        </div>
+
+        <label className="flex items-center gap-2 text-sm text-gray-700">
+          <input
+            name="acceptedTerms"
+            type="checkbox"
+            checked={formValues.acceptedTerms}
+            onChange={handleChange}
+            className="h-4 w-4"
+          />
+          Acepto los términos y condiciones
+        </label>
+
+        <button
+          type="submit"
+          className="mt-2 rounded-lg bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+        >
+          Confirmar pedido
+        </button>
+      </form>
     </div>
   );
 }
