@@ -163,37 +163,130 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ProductCard$2e
 ;
 function ProductCatalog({ products }) {
     const [search, setSearch] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
-    const filteredProducts = products.filter((product)=>product.title.toLowerCase().includes(search.toLowerCase()));
+    const [minPrice, setMinPrice] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    const [maxPrice, setMaxPrice] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
+    function clearFilters() {
+        setSearch("");
+        setMinPrice("");
+        setMaxPrice("");
+    }
+    const filteredProducts = products.filter((product)=>{
+        const matchesSearch = product.title.toLowerCase().includes(search.toLowerCase());
+        const matchesMinPrice = minPrice === "" || product.price >= Number(minPrice);
+        const matchesMaxPrice = maxPrice === "" || product.price <= Number(maxPrice);
+        return matchesSearch && matchesMinPrice && matchesMaxPrice;
+    });
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mb-6 rounded-xl border border-gray-200 bg-white p-4 shadow-sm",
+                className: "mb-6 flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-4 shadow-sm sm:flex-row sm:items-end",
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                        htmlFor: "search",
-                        className: "mb-1 block text-sm font-medium text-gray-700",
-                        children: "Buscar por nombre"
-                    }, void 0, false, {
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "flex-1",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                htmlFor: "search",
+                                className: "mb-1 block text-sm font-medium text-gray-700",
+                                children: "Buscar por nombre"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ProductCatalog.tsx",
+                                lineNumber: 30,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                id: "search",
+                                type: "text",
+                                value: search,
+                                onChange: (event)=>setSearch(event.target.value),
+                                placeholder: "Ej. Mascara, Lipstick...",
+                                className: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ProductCatalog.tsx",
+                                lineNumber: 33,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 17,
+                        lineNumber: 29,
                         columnNumber: 9
                     }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                        id: "search",
-                        type: "text",
-                        value: search,
-                        onChange: (event)=>setSearch(event.target.value),
-                        placeholder: "Ej. Mascara, Lipstick...",
-                        className: "w-full max-w-sm rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-full sm:w-32",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                htmlFor: "minPrice",
+                                className: "mb-1 block text-sm font-medium text-gray-700",
+                                children: "Precio mínimo"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ProductCatalog.tsx",
+                                lineNumber: 44,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                id: "minPrice",
+                                type: "number",
+                                min: 0,
+                                value: minPrice,
+                                onChange: (event)=>setMinPrice(event.target.value),
+                                placeholder: "$0",
+                                className: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ProductCatalog.tsx",
+                                lineNumber: 47,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/ProductCatalog.tsx",
+                        lineNumber: 43,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "w-full sm:w-32",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                htmlFor: "maxPrice",
+                                className: "mb-1 block text-sm font-medium text-gray-700",
+                                children: "Precio máximo"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ProductCatalog.tsx",
+                                lineNumber: 59,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                id: "maxPrice",
+                                type: "number",
+                                min: 0,
+                                value: maxPrice,
+                                onChange: (event)=>setMaxPrice(event.target.value),
+                                placeholder: "$999",
+                                className: "w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                            }, void 0, false, {
+                                fileName: "[project]/components/ProductCatalog.tsx",
+                                lineNumber: 62,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/components/ProductCatalog.tsx",
+                        lineNumber: 58,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        type: "button",
+                        onClick: clearFilters,
+                        className: "rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 hover:bg-gray-100",
+                        children: "Limpiar filtros"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 20,
+                        lineNumber: 73,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ProductCatalog.tsx",
-                lineNumber: 16,
+                lineNumber: 28,
                 columnNumber: 7
             }, this),
             filteredProducts.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -204,7 +297,7 @@ function ProductCatalog({ products }) {
                         children: "🔍"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 32,
+                        lineNumber: 84,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -212,31 +305,31 @@ function ProductCatalog({ products }) {
                         children: "No se encontraron productos"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 33,
+                        lineNumber: 85,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "text-gray-500",
-                        children: "Prueba con otro término de búsqueda."
+                        children: "Prueba con otros criterios de búsqueda."
                     }, void 0, false, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 34,
+                        lineNumber: 86,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         type: "button",
-                        onClick: ()=>setSearch(""),
+                        onClick: clearFilters,
                         className: "rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700",
                         children: "Limpiar filtros"
                     }, void 0, false, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 35,
+                        lineNumber: 87,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/ProductCatalog.tsx",
-                lineNumber: 31,
+                lineNumber: 83,
                 columnNumber: 9
             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4",
@@ -244,18 +337,18 @@ function ProductCatalog({ products }) {
                         product: product
                     }, product.id, false, {
                         fileName: "[project]/components/ProductCatalog.tsx",
-                        lineNumber: 46,
+                        lineNumber: 98,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/components/ProductCatalog.tsx",
-                lineNumber: 44,
+                lineNumber: 96,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/ProductCatalog.tsx",
-        lineNumber: 15,
+        lineNumber: 27,
         columnNumber: 5
     }, this);
 }
