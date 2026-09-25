@@ -1,4 +1,4 @@
-import ProductCard from "@/components/ProductCard";
+import ProductCatalog from "@/components/ProductCatalog";
 import type { Product } from "@/types/product";
 
 const PRODUCTS_URL =
@@ -22,11 +22,7 @@ export default async function HomePage() {
     <div>
       <h1 className="mb-6 text-3xl font-bold">Catálogo de productos</h1>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ProductCatalog products={products} />
     </div>
   );
 }
